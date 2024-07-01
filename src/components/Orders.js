@@ -1,7 +1,7 @@
-// src/components/Orders.js
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase'; // Import your Firebase database configuration
-import { collection, addDoc, getDocs } from 'firebase/firestore'; // Import Firestore functions
+import { db } from '../firebase';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+import './Orders.css'; // Import the CSS file
 
 const Orders = () => {
   const [jobType, setJobType] = useState('');
@@ -46,11 +46,11 @@ const Orders = () => {
   };
 
   return (
-    <div>
+    <div className="orders-container">
       {showForm ? (
         <div>
           <h2>Submit a New Order</h2>
-          <form onSubmit={handleSubmit}>
+          <form className="orders-form" onSubmit={handleSubmit}>
             <input
               type="text"
               value={jobType}
@@ -85,11 +85,14 @@ const Orders = () => {
       ) : (
         <div>
           <h2>Order Dashboard</h2>
-          <button onClick={() => setShowForm(true)}>Add New Order</button>
-          <ul>
+          <button className="dashboard-button" onClick={() => setShowForm(true)}>Add New Order</button>
+          <ul className="orders-list">
             {orders.map(order => (
               <li key={order.id}>
-                <strong>Job Type:</strong> {order.jobType}, <strong>Quantity:</strong> {order.quantity}, <strong>Deadline:</strong> {order.deadline}, <strong>Materials:</strong> {order.materials}
+                <strong>Job Type:</strong> {order.jobType}
+                <strong>Quantity:</strong> {order.quantity}
+                <strong>Deadline:</strong> {order.deadline}
+                <strong>Materials:</strong> {order.materials}
               </li>
             ))}
           </ul>

@@ -1,17 +1,21 @@
 // src/components/UserProfile.js
 import React, { useState } from 'react';
-import { updateProfile } from 'firebase/auth'; // Import updateProfile from Firebase Authentication
-import { auth } from '../firebase'; // Adjust the path according to your firebase setup
+import { updateProfile } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+import './UserProfile.css'; // Import the CSS file
 
-const UserProfile = ({ user }) => {
-  const [newUsername, setNewUsername] = useState(user.displayName || '');
+const UserProfile = ({ user, onUpdateUsername }) => {
+  const [newUsername, setNewUsername] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newUsername) return; // Handle empty username case
     try {
       await updateProfile(auth.currentUser, { displayName: newUsername });
-      alert('Username updated successfully!');
+      onUpdateUsername(newUsername);
+      setNewUsername('');
     } catch (error) {
       console.error("Error updating username: ", error);
     }
@@ -26,10 +30,10 @@ const UserProfile = ({ user }) => {
           value={newUsername}
           onChange={(e) => setNewUsername(e.target.value)}
           placeholder="Enter new username"
-          className="username-input"
         />
-        <button type="submit" className="update-button">Update Username</button>
+        <button type="submit">Update Username</button>
       </form>
+      <button className="back-home-button" onClick={() => navigate('/')}>Back to Home</button>
     </div>
   );
 };

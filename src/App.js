@@ -1,12 +1,13 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import { auth } from './firebase';
 import AuthPage from './pages/AuthPage';
 import Orders from './components/Orders';
 import Tasks from './components/Tasks';
 import Finance from './components/Finance';
 import ProfileMenu from './components/ProfileMenu';
+import UserProfile from './components/UserProfile'; // Import the UserProfile component
 
 import './App.css';
 
@@ -25,7 +26,7 @@ const App = () => {
       <div className="app-container">
         <header className="app-header">
           <h1>Offset Printing Press</h1>
-          {user && <ProfileMenu user={user} />}
+          {user && <ProfileMenu user={user} />} {/* Display profile menu if user is signed in */}
         </header>
         <main className="app-main">
           <Routes>
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/orders" element={user ? <Orders /> : <Navigate to="/auth" />} />
             <Route path="/tasks" element={user ? <Tasks /> : <Navigate to="/auth" />} />
             <Route path="/finance" element={user ? <Finance /> : <Navigate to="/auth" />} />
+            <Route path="/profile" element={user ? <UserProfile user={user} onUpdateUsername={(newUsername) => setUser({...user, displayName: newUsername})} /> : <Navigate to="/auth" />} />
             <Route
               path="/"
               element={

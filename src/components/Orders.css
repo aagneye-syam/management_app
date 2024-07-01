@@ -2,78 +2,68 @@
 .orders-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .orders-container h2 {
     text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .orders-form input, .orders-form button {
+    width: 100%;
+    padding: 0.75rem;
     margin-bottom: 1rem;
-  }
-  
-  .order-form-container {
-    margin-bottom: 2rem;
-  }
-  
-  .order-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .order-form input {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 4px;
   }
   
-  .order-form button {
-    padding: 0.5rem 1rem;
-    border: none;
+  .orders-form button {
     background-color: #3498db;
-    color: #fff;
+    color: white;
+    border: none;
     cursor: pointer;
+    transition: background-color 0.3s;
   }
   
-  .order-form button:hover {
+  .orders-form button:hover {
     background-color: #2980b9;
   }
   
-  .orders-dashboard {
-    margin-top: 2rem;
-  }
-  
-  .orders-dashboard table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .orders-dashboard th,
-  .orders-dashboard td {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  
-  .orders-dashboard th {
-    background-color: #f4f4f4;
-  }
-  
-  .success-message {
-    color: green;
-    text-align: center;
-    margin-top: 1rem;
-  }
-  
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
+  .dashboard-button {
     background-color: #2c3e50;
-    color: #fff;
-    cursor: pointer;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
     margin-bottom: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
   }
   
-  button:hover {
-    background-color: #34495e;
+  .dashboard-button:hover {
+    background-color: #1a242f;
+  }
+  
+  .orders-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .orders-list li {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .orders-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .orders-list li strong {
+    display: block;
+    margin-bottom: 0.5rem;
   }
   

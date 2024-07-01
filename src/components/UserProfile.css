@@ -1,0 +1,62 @@
+/* src/components/UserProfile.css */
+.user-profile-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-profile-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-profile-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .user-profile-container input {
+    width: 93%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .user-profile-container button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .user-profile-container button:hover {
+    background-color: #45a049;
+  }
+  
+  .back-home-button {
+    margin-top: 1rem;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 0.75rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .back-home-button:hover {
+    background-color: #2980b9;
+  }
+  

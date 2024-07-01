@@ -1,13 +1,17 @@
 // src/components/ProfileMenu.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
 
 const ProfileMenu = ({ user }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="profile-menu">
-      <Link to="/profile" className="username">
+      <span className="username" onClick={() => navigate('/profile')}>
         {user.displayName || user.email}
-      </Link>
+      </span>
+      <button className="sign-out-button" onClick={() => auth.signOut()}>Sign Out</button>
     </div>
   );
 };
