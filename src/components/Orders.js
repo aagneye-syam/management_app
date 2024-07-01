@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
-import './Orders.css'; // Import the CSS file
+import './Orders.css'; // Import the combined CSS file
 import OrderDashboard from './OrderDashboard'; // Import the OrderDashboard component
 
 const Orders = () => {
@@ -9,6 +9,7 @@ const Orders = () => {
   const [quantity, setQuantity] = useState('');
   const [deadline, setDeadline] = useState('');
   const [materials, setMaterials] = useState('');
+  const [amount, setAmount] = useState(''); // New state for order amount
   const [submitted, setSubmitted] = useState(false);
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(true);
@@ -29,19 +30,29 @@ const Orders = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addDoc(collection(db, 'orders'), {
+      const orderRef = await addDoc(collection(db, 'orders'), {
         jobType,
         quantity,
         deadline,
         materials,
+        amount, // Include the amount in the order document
         completed: false // Default completed status
       });
+
+      // Add finance detail associated with the order
+      await addDoc(collection(db, 'finance'), {
+        orderId: orderRef.id,
+        jobType,
+        amount
+      });
+
       setSubmitted(true);
       setShowForm(false);
       setJobType('');
       setQuantity('');
       setDeadline('');
       setMaterials('');
+      setAmount(''); // Reset amount
     } catch (error) {
       console.error('Error adding document: ', error);
     }
@@ -58,8 +69,23 @@ const Orders = () => {
         jobType,
         quantity,
         deadline,
-        materials
+        materials,
+        amount // Include the amount in the update
       });
+
+      // Update finance detail associated with the order
+      const financeQuerySnapshot = await getDocs(collection(db, 'finance'));
+      const financeDocs = financeQuerySnapshot.docs;
+      const financeDoc = financeDocs.find(doc => doc.data().orderId === orderId);
+      
+      if (financeDoc) {
+        const financeRef = doc(db, 'finance', financeDoc.id);
+        await updateDoc(financeRef, {
+          jobType,
+          amount
+        });
+      }
+
       setSubmitted(true);
     } catch (error) {
       console.error('Error updating document: ', error);
@@ -111,12 +137,21 @@ const Orders = () => {
                 required
               />
             </div>
+            <div className="form-group">
+              <label>Amount</label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter Amount"
+                required
+              />
+            </div>
             <div className="buttons-form">
               <button type="submit" className="submit-button">Submit Order</button>
-              <button className="toggle-dashboard-button" onClick={toggleForm}>Show Dashboard</button>
+              <button type="button" className="toggle-dashboard-button" onClick={toggleForm}>Show Dashboard</button>
             </div>
           </form>
-          
         </div>
       ) : (
         <OrderDashboard orders={orders} toggleForm={toggleForm} handleEdit={handleEdit} />
