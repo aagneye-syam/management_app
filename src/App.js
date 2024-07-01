@@ -1,13 +1,14 @@
 // src/App.js
+
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { auth } from './firebase';
 import AuthPage from './pages/AuthPage';
 import Orders from './components/Orders';
 import Tasks from './components/Tasks';
 import Finance from './components/Finance';
-import ProfileMenu from './components/ProfileMenu';
-import UserProfile from './components/UserProfile'; // Import the UserProfile component
+import Header from './components/Header'; // Import the Header component
+import UserProfile from './components/UserProfile';
 
 import './App.css';
 
@@ -24,17 +25,14 @@ const App = () => {
   return (
     <Router>
       <div className="app-container">
-        <header className="app-header">
-          <h1>Offset Printing Press</h1>
-          {user && <ProfileMenu user={user} />} {/* Display profile menu if user is signed in */}
-        </header>
+        <Header /> {/* Include the Header component */}
         <main className="app-main">
           <Routes>
             <Route path="/auth" element={user ? <Navigate to="/" /> : <AuthPage />} />
             <Route path="/orders" element={user ? <Orders /> : <Navigate to="/auth" />} />
             <Route path="/tasks" element={user ? <Tasks /> : <Navigate to="/auth" />} />
+            <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/finance" element={user ? <Finance /> : <Navigate to="/auth" />} />
-            <Route path="/profile" element={user ? <UserProfile user={user} onUpdateUsername={(newUsername) => setUser({...user, displayName: newUsername})} /> : <Navigate to="/auth" />} />
             <Route
               path="/"
               element={
