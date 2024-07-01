@@ -1,0 +1,79 @@
+/* src/components/Orders.css */
+.orders-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .orders-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .order-form-container {
+    margin-bottom: 2rem;
+  }
+  
+  .order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .order-form input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .order-form button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .order-form button:hover {
+    background-color: #2980b9;
+  }
+  
+  .orders-dashboard {
+    margin-top: 2rem;
+  }
+  
+  .orders-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .orders-dashboard th,
+  .orders-dashboard td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .orders-dashboard th {
+    background-color: #f4f4f4;
+  }
+  
+  .success-message {
+    color: green;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #2c3e50;
+    color: #fff;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  
+  button:hover {
+    background-color: #34495e;
+  }
+  

@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 const ProfileMenu = ({ user }) => {
   return (
     <div className="profile-menu">
-      <Link to="/profile" className="username-link">
-        <span className="username">{user.displayName || user.email}</span>
+      <Link to="/profile" className="username">
+        {user.displayName || user.email}
       </Link>
     </div>
   );
