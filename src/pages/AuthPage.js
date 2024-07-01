@@ -66,7 +66,7 @@ const AuthPage = () => {
       <button onClick={toggleSignUp} className="auth-toggle">
         {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
       </button>
-      {error && <p className="auth-error">{error}</p>} {/* Display error message if there's an error */}
+      {error && <p className="auth-error">Account not found</p>} {/* Display error message if there's an error */}
     </div>
   );
 };
