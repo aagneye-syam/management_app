@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 import './Orders.css'; // Import the CSS file
-import OrderDashboard from './OrderDashboard'; // Import the new component
+import OrderDashboard from './OrderDashboard'; // Import the OrderDashboard component
 
 const Orders = () => {
   const [jobType, setJobType] = useState('');
@@ -34,6 +34,7 @@ const Orders = () => {
         quantity,
         deadline,
         materials,
+        completed: false // Default completed status
       });
       setSubmitted(true);
       setShowForm(false);
@@ -48,6 +49,21 @@ const Orders = () => {
 
   const toggleForm = () => {
     setShowForm(!showForm);
+  };
+
+  const handleEdit = async (orderId) => {
+    const orderRef = doc(db, 'orders', orderId);
+    try {
+      await updateDoc(orderRef, {
+        jobType,
+        quantity,
+        deadline,
+        materials
+      });
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error updating document: ', error);
+    }
   };
 
   return (
@@ -100,9 +116,10 @@ const Orders = () => {
               <button className="toggle-dashboard-button" onClick={toggleForm}>Show Dashboard</button>
             </div>
           </form>
+          
         </div>
       ) : (
-        <OrderDashboard orders={orders} toggleForm={toggleForm} />
+        <OrderDashboard orders={orders} toggleForm={toggleForm} handleEdit={handleEdit} />
       )}
     </div>
   );
