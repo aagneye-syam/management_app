@@ -1,5 +1,3 @@
-// src/components/OrderDashboard.js
-
 import React from 'react';
 import './Orders.css'; // Import the CSS file
 
