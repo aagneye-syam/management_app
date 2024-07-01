@@ -1,8 +1,8 @@
-// src/components/Orders.js
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import './Orders.css'; // Import the CSS file
+import OrderDashboard from './OrderDashboard'; // Import the new component
 
 const Orders = () => {
   const [jobType, setJobType] = useState('');
@@ -100,25 +100,9 @@ const Orders = () => {
               <button className="toggle-dashboard-button" onClick={toggleForm}>Show Dashboard</button>
             </div>
           </form>
-          
         </div>
       ) : (
-        <div>
-          <h2>Order Dashboard</h2>
-          <button className="toggle-dashboard-button" onClick={toggleForm}>
-            Add New Order
-          </button>
-          <ul className="orders-list">
-            {orders.map(order => (
-              <li key={order.id}>
-                <strong>Job Type:</strong> {order.jobType}<br />
-                <strong>Quantity:</strong> {order.quantity}<br />
-                <strong>Deadline:</strong> {order.deadline}<br />
-                <strong>Materials:</strong> {order.materials}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <OrderDashboard orders={orders} toggleForm={toggleForm} />
       )}
     </div>
   );
