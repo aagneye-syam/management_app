@@ -1,6 +1,6 @@
 import React from 'react';
 
-const OrderDashboard = ({ orders, toggleForm, handleEdit }) => {
+const OrderDashboard = ({ orders, toggleForm, setEditingOrder }) => {
   return (
     <div>
       <h2>Order Dashboard</h2>
@@ -23,7 +23,7 @@ const OrderDashboard = ({ orders, toggleForm, handleEdit }) => {
               <td>{order.deadline}</td>
               <td>{order.materials}</td>
               <td>
-                <button onClick={() => handleEdit(order.id)}>Edit</button>
+                <button onClick={() => setEditingOrder(order)}>Edit</button>
               </td>
             </tr>
           ))}

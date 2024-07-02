@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
-import './Orders.css'; // Import the combined CSS file
-import OrderDashboard from './OrderDashboard'; // Import the OrderDashboard component
+import './Orders.css';
+import OrderDashboard from './OrderDashboard';
 
 const Orders = () => {
   const [jobType, setJobType] = useState('');
   const [quantity, setQuantity] = useState('');
   const [deadline, setDeadline] = useState('');
   const [materials, setMaterials] = useState('');
-  const [amount, setAmount] = useState(''); // New state for order amount
+  const [amount, setAmount] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(true);
+  const [editingOrder, setEditingOrder] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -29,17 +30,24 @@ const Orders = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (editingOrder) {
+      await handleEditSubmit();
+    } else {
+      await handleNewOrderSubmit();
+    }
+  };
+
+  const handleNewOrderSubmit = async () => {
     try {
       const orderRef = await addDoc(collection(db, 'orders'), {
         jobType,
         quantity,
         deadline,
         materials,
-        amount, // Include the amount in the order document
-        completed: false // Default completed status
+        amount,
+        completed: false
       });
 
-      // Add finance detail associated with the order
       await addDoc(collection(db, 'finance'), {
         orderId: orderRef.id,
         jobType,
@@ -48,35 +56,26 @@ const Orders = () => {
 
       setSubmitted(true);
       setShowForm(false);
-      setJobType('');
-      setQuantity('');
-      setDeadline('');
-      setMaterials('');
-      setAmount(''); // Reset amount
+      resetForm();
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
 
-  const toggleForm = () => {
-    setShowForm(!showForm);
-  };
-
-  const handleEdit = async (orderId) => {
-    const orderRef = doc(db, 'orders', orderId);
+  const handleEditSubmit = async () => {
+    const orderRef = doc(db, 'orders', editingOrder.id);
     try {
       await updateDoc(orderRef, {
         jobType,
         quantity,
         deadline,
         materials,
-        amount // Include the amount in the update
+        amount
       });
 
-      // Update finance detail associated with the order
       const financeQuerySnapshot = await getDocs(collection(db, 'finance'));
       const financeDocs = financeQuerySnapshot.docs;
-      const financeDoc = financeDocs.find(doc => doc.data().orderId === orderId);
+      const financeDoc = financeDocs.find(doc => doc.data().orderId === editingOrder.id);
       
       if (financeDoc) {
         const financeRef = doc(db, 'finance', financeDoc.id);
@@ -87,16 +86,41 @@ const Orders = () => {
       }
 
       setSubmitted(true);
+      setShowForm(false);
+      resetForm();
+      setEditingOrder(null);
     } catch (error) {
       console.error('Error updating document: ', error);
     }
+  };
+
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
+
+  const resetForm = () => {
+    setJobType('');
+    setQuantity('');
+    setDeadline('');
+    setMaterials('');
+    setAmount('');
+  };
+
+  const handleEditClick = (order) => {
+    setJobType(order.jobType);
+    setQuantity(order.quantity);
+    setDeadline(order.deadline);
+    setMaterials(order.materials);
+    setAmount(order.amount);
+    setEditingOrder(order);
+    setShowForm(true);
   };
 
   return (
     <div className="orders-container">
       {showForm ? (
         <div>
-          <h2>Submit a New Order</h2>
+          <h2>{editingOrder ? 'Edit Order' : 'Submit a New Order'}</h2>
           <form className="orders-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Job Type</label>
@@ -148,13 +172,21 @@ const Orders = () => {
               />
             </div>
             <div className="buttons-form">
-              <button type="submit" className="submit-button">Submit Order</button>
-              <button type="button" className="toggle-dashboard-button" onClick={toggleForm}>Show Dashboard</button>
+              <button type="submit" className="submit-button">
+                {editingOrder ? 'Update Order' : 'Submit Order'}
+              </button>
+              <button type="button" className="toggle-dashboard-button" onClick={toggleForm}>
+                Show Dashboard
+              </button>
             </div>
           </form>
         </div>
       ) : (
-        <OrderDashboard orders={orders} toggleForm={toggleForm} handleEdit={handleEdit} />
+        <OrderDashboard
+          orders={orders}
+          toggleForm={toggleForm}
+          setEditingOrder={handleEditClick}
+        />
       )}
     </div>
   );
