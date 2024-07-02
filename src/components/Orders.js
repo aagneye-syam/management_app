@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, onSnapshot } from 'firebase/firestore';
 import './Orders.css';
 import OrderDashboard from './OrderDashboard';
 
@@ -10,23 +10,21 @@ const Orders = () => {
   const [deadline, setDeadline] = useState('');
   const [materials, setMaterials] = useState('');
   const [amount, setAmount] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(true);
   const [editingOrder, setEditingOrder] = useState(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      const querySnapshot = await getDocs(collection(db, 'orders'));
-      const ordersList = querySnapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(collection(db, 'orders'), (snapshot) => {
+      const ordersList = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       setOrders(ordersList);
-    };
+    });
 
-    fetchOrders();
-  }, [submitted]);
+    return () => unsubscribe();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +52,6 @@ const Orders = () => {
         amount
       });
 
-      setSubmitted(true);
       setShowForm(false);
       resetForm();
     } catch (error) {
@@ -73,11 +70,9 @@ const Orders = () => {
         amount
       });
 
-      const financeQuerySnapshot = await getDocs(collection(db, 'finance'));
-      const financeDocs = financeQuerySnapshot.docs;
-      const financeDoc = financeDocs.find(doc => doc.data().orderId === editingOrder.id);
-      
-      if (financeDoc) {
+      const financeQuerySnapshot = await getDocs(query(collection(db, 'finance'), where('orderId', '==', editingOrder.id)));
+      if (!financeQuerySnapshot.empty) {
+        const financeDoc = financeQuerySnapshot.docs[0];
         const financeRef = doc(db, 'finance', financeDoc.id);
         await updateDoc(financeRef, {
           jobType,
@@ -85,12 +80,28 @@ const Orders = () => {
         });
       }
 
-      setSubmitted(true);
       setShowForm(false);
       resetForm();
       setEditingOrder(null);
     } catch (error) {
       console.error('Error updating document: ', error);
+    }
+  };
+
+  const handleDelete = async (order) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this order?');
+    if (confirmDelete) {
+      try {
+        await deleteDoc(doc(db, 'orders', order.id));
+
+        const financeQuerySnapshot = await getDocs(query(collection(db, 'finance'), where('orderId', '==', order.id)));
+        if (!financeQuerySnapshot.empty) {
+          const financeDoc = financeQuerySnapshot.docs[0];
+          await deleteDoc(doc(db, 'finance', financeDoc.id));
+        }
+      } catch (error) {
+        console.error('Error deleting document: ', error);
+      }
     }
   };
 
@@ -185,7 +196,8 @@ const Orders = () => {
         <OrderDashboard
           orders={orders}
           toggleForm={toggleForm}
-          setEditingOrder={handleEditClick}
+          handleEdit={handleEditClick}
+          handleDelete={handleDelete}
         />
       )}
     </div>

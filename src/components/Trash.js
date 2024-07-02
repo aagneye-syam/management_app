@@ -1,10 +1,10 @@
 import React from 'react';
 
-const OrderDashboard = ({ orders, toggleForm, handleEdit, handleDelete }) => {
+const Trash = ({ trashedOrders, restoreOrder, permanentlyDeleteOrder, toggleDashboard }) => {
   return (
     <div>
-      <h2>Order Dashboard</h2>
-      <button className="toggle-dashboard-button" onClick={toggleForm}>Back to Orders</button>
+      <h2>Trash</h2>
+      <button className="toggle-dashboard-button" onClick={toggleDashboard}>Back to Dashboard</button>
       <table className="orders-table">
         <thead>
           <tr>
@@ -12,19 +12,21 @@ const OrderDashboard = ({ orders, toggleForm, handleEdit, handleDelete }) => {
             <th>Quantity</th>
             <th>Deadline</th>
             <th>Materials</th>
+            <th>Deleted At</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {orders.map(order => (
+          {trashedOrders.map(order => (
             <tr key={order.id}>
               <td>{order.jobType}</td>
               <td>{order.quantity}</td>
               <td>{order.deadline}</td>
               <td>{order.materials}</td>
+              <td>{new Date(order.deletedAt.seconds * 1000).toLocaleString()}</td>
               <td>
-                <button onClick={() => handleEdit(order)}>Edit</button>
-                <button onClick={() => handleDelete(order)}>Delete</button>
+                <button onClick={() => restoreOrder(order)}>Restore</button>
+                <button onClick={() => permanentlyDeleteOrder(order.id)}>Delete Permanently</button>
               </td>
             </tr>
           ))}
@@ -34,4 +36,4 @@ const OrderDashboard = ({ orders, toggleForm, handleEdit, handleDelete }) => {
   );
 };
 
-export default OrderDashboard;
+export default Trash;
