@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./orderDashboard.component.css"
 const OrderDashboard = ({ orders, toggleForm, handleEdit, handleDelete }) => {
   return (
     <div>
