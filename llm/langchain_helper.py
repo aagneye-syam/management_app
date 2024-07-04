@@ -5,6 +5,6 @@ load_dotenv()
 
 llm = GooglePalm(google_api_key=["API_KEY"], temperature = 0.9)
 
-paragraph =  llm(input(print("enter some that i can talk to you")))
+paragraph =  llm(input("enter some that i can talk to you"))
 
 print(paragraph)
