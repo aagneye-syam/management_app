@@ -1,13 +1,13 @@
 from langchain.llms import GooglePalm
 from dotenv import load_dotenv
-import os 
+import os
 
 load_dotenv()
 
-os.environ("API_KEY")
+api_key = os.environ["API_KEY"]
 
-llm = GooglePalm(google_api_key=os.environ, temperature = 0.9)
+llm = GooglePalm(google_api_key=api_key, temperature=0.9)
 
-paragraph =  llm(input("enter some that i can talk to you"))
+paragraph = llm(input("Enter something you want to talk about: "))
 
 print(paragraph)
